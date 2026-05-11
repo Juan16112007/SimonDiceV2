@@ -1,5 +1,4 @@
 //Simon Dice v2
-// Commit 1: Defino las constantes, los tipos y el mapeo de letras
 
 const readline = require('readline');
 
@@ -58,5 +57,25 @@ const LETRAS_VALIDAS = {
     [tModo.DIFICIL]:
     '(R = Rojo, V = Verde, A = Azul, D = Dorado, B = Blanco, M = Marrón, N = Naranja, x = Ayuda)',
 };
+
+// --- NUEVO  ---
+// generarSecuencia: devuelve un array de colores aleatorios.
+// El rango depende del modo: 4 colores en fácil, 7 en difícil.
+function generarSecuencia(modo, longitud) {
+    const numColores =
+    modo === tModo.DIFICIL ? MAX_COLORES_DIFICIL : MAX_COLORES_FACIL;
+
+    const secuencia = [];
+    for (let i = 0; i < longitud; i++) {
+    const indice = Math.floor(Math.random() * numColores);
+    secuencia.push(TODOS_LOS_COLORES[indice]);
+    }
+    return secuencia;
+}
+
+// esto es para ver si funciona nada mas
+console.log('Secuencia fácil (3):', generarSecuencia(tModo.FACIL, 3));
+console.log('Secuencia difícil (5):', generarSecuencia(tModo.DIFICIL, 5));
+rl.close();
 
 rl.close();
