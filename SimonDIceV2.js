@@ -58,7 +58,6 @@ const LETRAS_VALIDAS = {
     '(R = Rojo, V = Verde, A = Azul, D = Dorado, B = Blanco, M = Marrón, N = Naranja, x = Ayuda)',
 };
 
-// --- NUEVO  ---
 // generarSecuencia: devuelve un array de colores aleatorios.
 // El rango depende del modo: 4 colores en fácil, 7 en difícil.
 function generarSecuencia(modo, longitud) {
@@ -72,7 +71,7 @@ function generarSecuencia(modo, longitud) {
     }
     return secuencia;
 }
-// --- NUEVO en este commit ---
+
 // utilizarAyuda: si quedan ayudas, muestra el color y descuenta una
 // Devuelve  usado: true/false, numAyudas: número actualizado
 function utilizarAyuda(secuenciaColores, indice, numAyudas) {
@@ -88,11 +87,64 @@ function utilizarAyuda(secuenciaColores, indice, numAyudas) {
     return { usado: false, numAyudas };
 }
 
-// Prueba rápida
-const seq = ['Rojo', 'Verde', 'Azul'];
-console.log(utilizarAyuda(seq, 0, 3)); // debería mostrar Rojo y quedar 2
-console.log(utilizarAyuda(seq, 1, 0)); // sin ayudas
+// --- NUEVO en este commit ---
+// jugar: recorre las 15 secuencias.
+// Muestra cada una, borra pantalla, lee colores y gestiona ayudas y fallos.
+async function jugar(nombre, modo) {
+let numAyudas = NUM_AYUDAS_DEFAULT;
 
-rl.close();
+for (let numSeq = 1; numSeq <= MAX_SECUENCIAS; numSeq++) {
+    const secuencia = generarSecuencia(modo, numSeq);
+
+    console.log(`\nSequence number ${numSeq}: ${secuencia.join(' - ')}`);
+    console.log('Memoriza la secuencia y pulsa Enter para continuar...');
+    await question('');
+
+    console.clear();
+
+    console.log(`Ayudas disponibles: ${numAyudas}`);
+    console.log(`${nombre}, introduce la secuencia de ${numSeq} colores:`);
+    console.log(LETRAS_VALIDAS[modo]);
+
+    let acertado = true;
+
+    for (let i = 0; i < numSeq; i++) {
+    let colorIntroducido = null;
+
+    while (colorIntroducido === null) {
+        const entrada = (await question(`Color ${i + 1}: `)).trim().toUpperCase();
+
+        if (entrada === 'X') {
+        const resultado = utilizarAyuda(secuencia, i, numAyudas);
+        numAyudas = resultado.numAyudas;
+
+        } else if (LETRA_A_COLOR[entrada]) {
+        colorIntroducido = LETRA_A_COLOR[entrada];
+
+        } else {
+        console.log('Letra no reconocida. Prueba con las letras del menú de arriba.');
+        }
+    }
+
+    if (colorIntroducido !== secuencia[i]) {
+        acertado = false;
+        break;
+    }
+    }
+
+    if (acertado) {
+    console.log(`Enhorabuena, has acertado la secuencia número ${numSeq}.`);
+    } else {
+    console.log(
+        `\nHas fallado en la secuencia ${numSeq}. La correcta era: ${secuencia.join(' - ')}`
+    );
+    console.log(`¡Hasta la próxima, ${nombre}!`);
+    return;
+    }
+    }
+
+    console.log(`\n¡Increíble! Has superado las ${MAX_SECUENCIAS} secuencias. ¡Campeón, ${nombre}!`);
+}
+
 
 rl.close();
