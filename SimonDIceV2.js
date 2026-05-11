@@ -72,10 +72,27 @@ function generarSecuencia(modo, longitud) {
     }
     return secuencia;
 }
+// --- NUEVO en este commit ---
+// utilizarAyuda: si quedan ayudas, muestra el color y descuenta una
+// Devuelve  usado: true/false, numAyudas: número actualizado
+function utilizarAyuda(secuenciaColores, indice, numAyudas) {
+    if (numAyudas > 0) {
+    numAyudas--;
+    console.log(
+    `El siguiente color es el ${secuenciaColores[indice]}. Te quedan ${numAyudas} ayudas!`
+    );
+    return { usado: true, numAyudas };
+    }
 
-// esto es para ver si funciona nada mas
-console.log('Secuencia fácil (3):', generarSecuencia(tModo.FACIL, 3));
-console.log('Secuencia difícil (5):', generarSecuencia(tModo.DIFICIL, 5));
+    console.log('No dispones de más ayudas.');
+    return { usado: false, numAyudas };
+}
+
+// Prueba rápida
+const seq = ['Rojo', 'Verde', 'Azul'];
+console.log(utilizarAyuda(seq, 0, 3)); // debería mostrar Rojo y quedar 2
+console.log(utilizarAyuda(seq, 1, 0)); // sin ayudas
+
 rl.close();
 
 rl.close();
