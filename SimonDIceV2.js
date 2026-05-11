@@ -87,7 +87,7 @@ function utilizarAyuda(secuenciaColores, indice, numAyudas) {
     return { usado: false, numAyudas };
 }
 
-// --- NUEVO en este commit ---
+
 // jugar: recorre las 15 secuencias.
 // Muestra cada una, borra pantalla, lee colores y gestiona ayudas y fallos.
 async function jugar(nombre, modo) {
@@ -145,6 +145,34 @@ for (let numSeq = 1; numSeq <= MAX_SECUENCIAS; numSeq++) {
 
     console.log(`\n¡Increíble! Has superado las ${MAX_SECUENCIAS} secuencias. ¡Campeón, ${nombre}!`);
 }
+// main: pide el nombre, muestra el menú y lanza el modo elegido.
+async function main() {
+console.log('¡Bienvenido a Simon dice!\n');
+const nombre = (await question('¿Cuál es tu nombre? ')).trim();
+console.log(`\nHola ${nombre}!`);
 
+let opcion = -1;
 
+while (opcion !== 0) {
+    console.log('\nElija una opción para continuar:');
+    console.log('0: Salir.');
+    console.log('1: Jugar en modo sencillo.');
+    console.log('2: Jugar en modo difícil.');
+
+    const entrada = (await question('Opción: ')).trim();
+    opcion = parseInt(entrada, 10);
+
+    if (opcion === 1) {
+    await jugar(nombre, tModo.FACIL);
+    } else if (opcion === 2) {
+    await jugar(nombre, tModo.DIFICIL);
+    } else if (opcion !== 0) {
+    console.log('Opción no válida. Elige 0, 1 o 2.');
+    }
+}
+
+console.log('\n¡Hasta luego!');
 rl.close();
+}
+
+main();
